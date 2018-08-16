@@ -1,3 +1,4 @@
+import json
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -31,6 +32,9 @@ def name():
 
 @app.route("/record", methods=['POST'])
 def add_record():
+    req_data = request.form
+    name = req_data['name']
+    cost = req_data['cost']
     record = Record(name='breakfast', cost=70)
     db.session.add(record)
     db.session.commit()
