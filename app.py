@@ -35,3 +35,22 @@ def add_record():
     db.session.add(record)
     db.session.commit()
     return 'Create Succeeded', 200
+
+
+@app.route("/record", methods=['GET'])
+def get_record():
+    records = Record.query.all()
+    records_json = json.dumps(
+        [
+            {
+                'id': record.id,
+                'name': record.name,
+                'cost': record.cost
+            }
+            for record in records
+        ],
+        indent=4,
+        ensure_ascii=False
+    )
+    return records_json, 200
+
