@@ -28,3 +28,10 @@ def hello():
 @app.route("/name")
 def name():
     return "Hello Frank"
+
+@app.route("/record", methods=['POST'])
+def add_record():
+    record = Record(name='breakfast', cost=70)
+    db.session.add(record)
+    db.session.commit()
+    return 'Create Succeeded', 200
