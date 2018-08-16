@@ -59,3 +59,11 @@ def get_record():
 def update_record():
     records = Record.query.filter_by(name='breakfast')
     return 'Update Succeeded', 200
+
+
+@app.route("/record", methods=["DELETE"])
+def delete_record():
+    first_record = Record.query.filter_by(name='breakfast').first()
+    db.session.delete(first_record)
+    db.session.commit()
+    return 'Delete Succeeded', 200
