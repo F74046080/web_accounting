@@ -1,5 +1,4 @@
-import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -35,39 +34,65 @@ def add_record():
     req_data = request.form
     name = req_data['name']
     cost = req_data['cost']
-    record = Record(name='breakfast', cost=70)
+    record = Record(name=name, cost=cost)
     db.session.add(record)
     db.session.commit()
     return 'Create Succeeded', 200
 
 
 @app.route("/record", methods=['GET'])
-def get_record():
+def get_records():
+    '''
+    get all data from db
+    '''
     records = Record.query.all()
-    records_json = json.dumps(
-        [
-            {
-                'id': record.id,
-                'name': record.name,
-                'cost': record.cost
-            }
-            for record in records
-        ],
-        indent=4,
-        ensure_ascii=False
+    records_data = [
+        {
+            'id': record.id,
+            'name': record.name,
+            'cost': record.cost
+        }
+        for record in records
+    ]
+    return jsonify(records_data), 200
+
+@app.route(
+    "/record/<int:record_id>",
+    methods=["GET"]
+)
+def get_record(record_id):
+    record = (
+        Record.query.filter_by(id=record_id).first()
     )
-    return records_json, 200
+    record_data = {
+        "id": record.id,
+        "name": record.name,
+        "cost": record.cost
+    }
+    return jsonify(record_data), 200
 
-
-@app.route("/record", methods=["PUT"])
-def update_record():
-    records = Record.query.filter_by(name='breakfast')
+@app.route(
+    "/record/<int:record_id>", 
+    methods=["PUT"]
+)
+def update_record(record_id):
+    reg_data = request.form
+    record = (
+        Record.query.filter_by(id=record_id).first()
+    )
+    record.name = reg_data["name"]
+    record.cost = reg_data["cost"]
+    db.session.add(record)
+    db.session.commit()
     return 'Update Succeeded', 200
 
 
-@app.route("/record", methods=["DELETE"])
-def delete_record():
-    first_record = Record.query.filter_by(name='breakfast').first()
-    db.session.delete(first_record)
+@app.route(
+    "/record/<int:record_id>",
+    methods=["DELETE"]
+)
+def delete_record(record_id):
+    record = Record.query.filter_by(id=record_id).first()
+    db.session.delete(record)
     db.session.commit()
     return 'Delete Succeeded', 200
