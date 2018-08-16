@@ -54,3 +54,8 @@ def get_record():
     )
     return records_json, 200
 
+
+@app.route("/record", methods=["PUT"])
+def update_record():
+    records = Record.query.filter_by(name='breakfast')
+    return 'Update Succeeded', 200
