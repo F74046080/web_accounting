@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-
 # initialize
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -22,10 +21,9 @@ class Record(db.Model):
 def index():
     return render_template("index.html")
 
-
-@app.route("/name")
-def name():
-    return "Hello Apple"
+# @app.route("/name")
+# def name():
+#     return "Hello Apple"
 
 @app.route("/record", methods=['POST'])
 def add_record():
