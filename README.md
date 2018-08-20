@@ -1,6 +1,11 @@
 # web_accounting
 ## Setup
 
+- Install required module
+```sh
+pip install -r requirements.txt
+```
+
 - Run python shell
 
 ```sh
